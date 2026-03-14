@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Favorites</title>
+</head>
+<body>
+
+<h1>My Favorites</h1>
+
+<a href="/">← Inicio</a>
+
+<ul>
+<!-- Iteración base que renderiza list element concretos para cada uno de los modelos Favoritos de base de datos -->
+{% for c in favorites %}
+    <li>
+        <strong>{{ c.name }}</strong><br>
+        <img src="{{ c.image }}" width="120">
+
+        <!-- Acción estricta vinculada al identificador del ciclo subyacente que acciona el endpoint de eliminación en back-end -->
+        <form method="post" action="/delete/{{ c.id }}">
+            <button type="submit">Eliminar</button>
+        </form>
+    </li>
+    <hr>
+{% endfor %}
+</ul>
+
+</body>
+</html>

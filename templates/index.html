@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Rick and Morty</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="bg-gray-200 min-h-screen flex flex-col">
+    <header class="bg-blue-400 h-55 flex flex-col">
+    <h1 class="justify-between h-40 items-center">Rick and Morty</h1>
+
+        <ul>
+            <li>
+                <a href="/">Inicio</a>
+            </li>
+            <li>
+                <a href="/favorites">Favorites</a>
+            </li>
+        </ul>
+    </header>
+
+    <main>
+        <div class="max-w-5xl mx-auto p-6 flex flex-col">
+            <!-- Formulario simple para interceder por peticiones GET enviando parámetros de búsqueda textual -->
+            <form method="get">
+                <input type="text" name="name" placeholder="Search character">
+                <button type="submit">Search</button>
+            </form>
+
+
+            {% if error_message %}
+            <p>{{ error_message }}</p>
+            {% endif %}
+            
+            <!-- Aca inicia la grilla de personajes -->
+            <ul class="grid grid-cols-4 gap-4 ">
+            {% for c in characters %}
+                <li class="bg-white text-blue-500 rounded-xl shadow-md p-4">
+                    <strong>{{ c.name }}</strong><br>
+                    Status: {{ c.status }}<br>
+                    Species: {{ c.species }}<br>
+                    Origin: {{ c.origin.name }}<br>
+                    <img src="{{ c.image }}" width="120"><br>
+            
+                    <!-- Formulario imperativo y oculto responsable de emitir POST integrales referenciando parámetros del personaje para registrarse de forma exitosa -->
+                    <form method="post" action="/save">
+                        <input type="hidden" name="api_id" value="{{ c.id }}">
+                        <input type="hidden" name="name" value="{{ c.name }}">
+                        <input type="hidden" name="image" value="{{ c.image }}">
+                        <input type="hidden" name="page" value="{{ page }}">
+                        <button type="submit">Guardar</button>
+                    </form>
+                </li>
+            
+            {% endfor %}
+            </ul>
+            <!-- Lógica condicional: Únicamente renderizar componentes de interactividad de paginación si se listaron bajo una modalidad por defecto sin interacciones de búsqueda ('search' false). -->
+            {% if not search %}
+                <!-- Enlace regresivo correspondiente al punto del atributo prev enviado directo de la información provista por la jerarquía en la clave info -->
+                {% if info.prev %}
+                    <a href="/?page={{ page - 1 }}">Previous</a>
+                {% endif %}
+            
+                <!-- Impresión tangible de posición sobre número de la página -->
+                Page {{ page }}
+            
+                <!-- Enlace iterativo correspondiente hacia adición posicional originado del atributo 'next' en la misma estructura paramétrica -->
+                {% if info.next %}
+                    <a href="/?page={{ page + 1 }}">Next</a>
+                {% endif %}
+            {% endif %}
+        </div>
+    </main>
+
+</body>
+</html>
